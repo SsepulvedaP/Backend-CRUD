@@ -7,10 +7,10 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-
     this.paths = {
       users: "/api/users",
       auth: "/api/auth",
+      chefs: "/api/chefs",
     };
 
     // Conectar a base de datos
@@ -36,12 +36,12 @@ class Server {
 
     // Directorio público
     this.app.use(express.static("public"));
-
   }
 
   routes() {
-    this.app.use(this.paths.users, require("../routes/users.routes"));
-    this.app.use(this.paths.auth, require("../routes/auth.routes"));
+    this.app.use(this.paths.users, require("../routes/users.routes").router);
+    this.app.use(this.paths.auth, require("../routes/auth.routes").router);
+    this.app.use(this.paths.chefs, require("../routes/chefs.routes").router);
   }
 
   listen() {

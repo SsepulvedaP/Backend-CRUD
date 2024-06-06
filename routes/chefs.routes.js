@@ -5,42 +5,47 @@ const { validateFields } = require("../middlewares/validate-fields");
 const { validateJWT } = require("../middlewares/validate-jwt");
 
 const {
-  usersGet,
-  userGet,
-  usersPut,
-  usersPost,
-  usersDelete,
-} = require("../controllers/users.controller");
+  chefsGet,
+  chefGet,
+  chefsPut,
+  chefsPost,
+  chefsDelete,
+} = require("../controllers/chefs.controller");
 const {
-  existUserById,
-  existUsernameByUser,
-  existPhoneByUser,
+  existChefById,
+  existEmailByChef,
+  existUsernameByChef,
+  existPhoneByChef,
+  existKitchenNameByChef,
+  existNitByChef,
 } = require("../helpers/db-validators");
 
 const router = Router();
 
-router.get("/", usersGet);
+router.get("/", chefsGet);
 
 router.get(
   "/:id",
   [
     validateJWT,
     check("id", "No es un ID válido").isMongoId(),
-    check("id").custom(existUserById),
+    check("id").custom(existChefById),
+    validateFields,
   ],
-  userGet
+  chefGet
 );
 
 router.post(
   "/",
   [
-    check("username", "El username es obligatorio").not().isEmpty(),
-    check("email", "El email es obligatorio").isEmail(),
-    check("username").custom(existUsernameByUser),
-    check("phone").custom(existPhoneByUser),
+    check("email").custom(existEmailByChef),
+    check("username").custom(existUsernameByChef),
+    check("kitchen_name").custom(existKitchenNameByChef),
+    check("phone").custom(existPhoneByChef),
+    check("nit").custom(existNitByChef),
     validateFields,
   ],
-  usersPost
+  chefsPost
 );
 
 router.put(
@@ -48,10 +53,10 @@ router.put(
   [
     validateJWT,
     check("id", "No es un ID válido").isMongoId(),
-    check("id").custom(existUserById),
+    check("id").custom(existChefById),
     validateFields,
   ],
-  usersPut
+  chefsPut
 );
 
 router.delete(
@@ -59,10 +64,10 @@ router.delete(
   [
     validateJWT,
     check("id", "No es un ID válido").isMongoId(),
-    check("id").custom(existUserById),
+    check("id").custom(existChefById),
     validateFields,
   ],
-  usersDelete
+  chefsDelete
 );
 
 module.exports = { router };
